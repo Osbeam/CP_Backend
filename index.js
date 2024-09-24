@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 });
 
 
-app.get("/", (req, res) => res.send(`Server listing on port ${PORT}`));
+app.get("/", (req, res) => res.send(`Server running on  ${PORT}`));
 app.use("/api", routes);
 app.all("*", (req, res) => res.status(404).json({ error: "404 Not Found" }));  
 
