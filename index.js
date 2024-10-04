@@ -17,15 +17,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
-// Log the connection string for debugging
-console.log("MongoDB Connection String:", process.env.DB_STRING);
-
-
 
 
 // connecting with database
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_STRING, { useNewUrlParser: true, useUnifiedTopology: true }
+mongoose.connect(process.env.DB_STRING
 ).then(()=>{
     console.warn("db connection done")
 })
@@ -54,7 +50,7 @@ io.on("connection", (socket) => {
       }
     });
     io.emit("onlineUsers", Array.from(onlineUsers.keys()));
-  });
+  }); 
 });
 
 // Make `io` available to your routes
@@ -74,9 +70,3 @@ app.all("*", (req, res) => res.status(404).json({ error: "404 Not Found" }));
 const server = app.listen(PORT, () =>
   console.log(`Server running on ${process.env.BACKEND_URL}`)
 );
-
-
-
-// const server = app.listen(PORT, '0.0.0.0', () =>
-//   console.log(`Server running on ${process.env.BACKEND_URL}`)
-// );
