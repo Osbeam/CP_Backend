@@ -67,6 +67,12 @@ app.all("*", (req, res) => res.status(404).json({ error: "404 Not Found" }));
 
 
 
-const server = app.listen(PORT, () =>
+// const server = app.listen(PORT, () =>
+//   console.log(`Server running on ${process.env.BACKEND_URL}`)
+// );
+
+
+
+const server = app.listen(PORT, '0.0.0.0', () =>
   console.log(`Server running on ${process.env.BACKEND_URL}`)
 );
