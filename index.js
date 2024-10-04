@@ -17,11 +17,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
+// Log the connection string for debugging
+console.log("MongoDB Connection String:", process.env.DB_STRING);
+
+
 
 
 // connecting with database
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_STRING
+mongoose.connect(process.env.DB_STRING, { useNewUrlParser: true, useUnifiedTopology: true }
 ).then(()=>{
     console.warn("db connection done")
 })
