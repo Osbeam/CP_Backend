@@ -21,10 +21,21 @@ app.use(express.json());
 
 // connecting with database
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_STRING
-).then(()=>{
-    console.warn("db connection done")
-})
+// mongoose.connect(process.env.DB_STRING
+// ).then(()=>{
+//     console.warn("db connection done")
+// })
+
+
+mongoose.connect(process.env.DB_STRING, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000
+}).then(() => {
+  console.warn("DB connection successful");
+}).catch((err) => {
+  console.error("DB connection error:", err.message);
+});
 
 
 
