@@ -3,7 +3,7 @@ const timestamps = require("mongoose-timestamp");
 const { type } = require("os");
 
 const userSchema = mongoose.Schema({
-    ProfileImage: { type: String, required: true },
+    ProfileImage: { type: String, required: false },
     FirstName: { type: String, required: true },
     LastName: { type: String, required: true },
     MobileNumber: { type: Number },

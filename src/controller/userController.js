@@ -17,7 +17,7 @@ const uploadimg = imgUpload.fields([
 ]);
 
 
-userController.post('/Register', uploadimg, async (req, res) => {
+userController.post('/Register', async (req, res) => {
   try {
     const { Password, ConfirmPassword } = req.body;
 
@@ -39,10 +39,6 @@ userController.post('/Register', uploadimg, async (req, res) => {
     }
 
     const userData = { ...req.body };
-
-    if (req.files) {
-      if (req.files.ProfileImage) userData.ProfileImage = req.files.ProfileImage[0].path;
-    }
 
     const userCreated = new UserInfo(userData);
     await userCreated.save();
@@ -91,21 +87,31 @@ userController.post("/Login", async (req, res) => {
 });
 
 
-userController.put("/update", async (req, res) => {
+userController.put("/update", uploadimg, async (req, res) => {
   try {
     const data = await userServices.updateData({ _id: req.body._id }, req.body);
+
+    // Check if files are present in the request and specifically if ProfileImage is there
+    if (req.files && req.files.ProfileImage) {
+      data.ProfileImage = req.files.ProfileImage[0].path;
+      
+      await data.save();
+    }
+
     sendResponse(res, 200, "Success", {
       success: true,
-      message: "User Updated successfully!",
+      message: "User updated successfully!",
       data: data
     });
   } catch (error) {
     console.log(error);
     sendResponse(res, 500, "Failed", {
+      success: false,
       message: error.message || "Internal server error",
     });
   }
 });
+
 
 
 userController.get("/getUserbyId/:userId", async (req, res) => {
