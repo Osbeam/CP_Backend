@@ -21,7 +21,7 @@ app.use(express.json());
 
 // connecting with database
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_STRING
+mongoose.connect(process.env.DB_STRING, { useNewUrlParser: true, useUnifiedTopology: true }
 ).then(()=>{
     console.warn("db connection done")
 })
