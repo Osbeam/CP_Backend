@@ -4,6 +4,7 @@ const { sendResponse } = require("../utils/common");
 const LoanForm = require("../model/loanFormSchema");
 const imgUpload = require("../utils/imageUpload");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+require("dotenv").config();
 
 
 const uploadimg = imgUpload.fields([

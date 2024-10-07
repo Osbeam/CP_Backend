@@ -8,6 +8,7 @@ const imgUpload = require("../utils/imageUpload")
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone'); 
 const auth = require('../utils/auth');
+require("dotenv").config();
 
 
 

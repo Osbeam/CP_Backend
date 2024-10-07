@@ -7,6 +7,7 @@ const imgUpload = require("../utils/imageUpload");
 const SalaryIncome = require('../model/salaryIncomeSchema'); 
 const ProfessionalIncome = require('../model/professionalIncomeSchema'); 
 const BusinessIncome = require('../model/bussinessIncomeSchema'); 
+require("dotenv").config();
 
 
 

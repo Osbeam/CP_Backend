@@ -7,6 +7,7 @@ const SalaryIncome = require("../model/salaryIncomeSchema");
 const { sendResponse } = require("../utils/common");
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 const imgUpload = require("../utils/imageUpload");
+require("dotenv").config();
 
 
 

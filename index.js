@@ -9,7 +9,7 @@ const http = require('http');
 
 const app = express();
 app.use('/uploads', express.static('uploads'))
-const PORT = process.env.PORT || 5006;
+const PORT = process.env.PORT || 5005;
 
 
 app.use(cors());
@@ -21,23 +21,11 @@ app.use(express.json());
 
 // connecting with database
 const mongoose = require("mongoose");
-const DB_STRING = process.env.DB_STRING;
-console.log('Attempting to connect to MongoDB...');
-
-
-
-mongoose.connect(DB_STRING, { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000 // Timeout after 5 seconds
+mongoose.connect(process.env.DB_STRING
+).then(()=>{
+    console.warn("db connection done")
 })
-.then(() => {
-    console.log('MongoDB connected successfully');
-})
-.catch(err => {
-    console.error('MongoDB connection error:', err.message);
-    console.error('Error details:', err);
-});
+
 
 
 
@@ -63,7 +51,7 @@ io.on("connection", (socket) => {
       }
     });
     io.emit("onlineUsers", Array.from(onlineUsers.keys()));
-  }); 
+  });
 });
 
 // Make `io` available to your routes
@@ -73,7 +61,7 @@ app.use((req, res, next) => {
 });
 
 
-app.get("/", (req, res) => res.send(`Server running on  ${PORT}`));
+app.get("/", (req, res) => res.send(`Server listing on port  ${PORT}`));
 app.use("/api", routes);
 app.all("*", (req, res) => res.status(404).json({ error: "404 Not Found" }));  
 
