@@ -21,12 +21,12 @@ app.use(express.json());
 
 // connecting with database
 const mongoose = require("mongoose");
-const dbURI = process.env.DB_STRING;
+const DB_STRING = process.env.DB_STRING;
 console.log('Attempting to connect to MongoDB...');
 
 
 
-mongoose.connect(dbURI, { 
+mongoose.connect(DB_STRING, { 
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     serverSelectionTimeoutMS: 5000 // Timeout after 5 seconds
