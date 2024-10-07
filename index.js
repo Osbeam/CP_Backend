@@ -9,7 +9,7 @@ const http = require('http');
 
 const app = express();
 app.use('/uploads', express.static('uploads'))
-const PORT = process.env.PORT || 5005;
+const PORT = process.env.PORT || 5006;
 
 
 app.use(cors());
@@ -21,31 +21,10 @@ app.use(express.json());
 
 // connecting with database
 const mongoose = require("mongoose");
-// mongoose.connect(process.env.DB_STRING
-// ).then(()=>{
-//     console.warn("db connection done")
-// })
-
-const connectWithRetry = () => {
-  mongoose.connect(process.env.DB_STRING, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 20000,
-    socketTimeoutMS: 45000,
-  })
-  .then(() => {
-    console.log('MongoDB connected');
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
-    setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
-  });
-};
-
-// Start the initial connection attempt
-connectWithRetry();
-
-
+mongoose.connect(process.env.DB_STRING
+).then(()=>{
+    console.warn("db connection done")
+})
 
 
 
@@ -88,10 +67,6 @@ app.all("*", (req, res) => res.status(404).json({ error: "404 Not Found" }));
 
 
 
-// const server = app.listen(PORT, () =>
-//   console.log(`Server running on ${process.env.BACKEND_URL}`)
-// );
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
-});
+const server = app.listen(PORT, () =>
+  console.log(`Server running on ${process.env.BACKEND_URL}`)
+);
