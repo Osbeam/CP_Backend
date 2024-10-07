@@ -21,10 +21,23 @@ app.use(express.json());
 
 // connecting with database
 const mongoose = require("mongoose");
-mongoose.connect(process.env.DB_STRING
-).then(()=>{
-    console.warn("db connection done")
+const dbURI = process.env.DB_STRING;
+console.log('Attempting to connect to MongoDB...');
+
+
+
+mongoose.connect(dbURI, { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000 // Timeout after 5 seconds
 })
+.then(() => {
+    console.log('MongoDB connected successfully');
+})
+.catch(err => {
+    console.error('MongoDB connection error:', err.message);
+    console.error('Error details:', err);
+});
 
 
 
