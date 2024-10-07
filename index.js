@@ -9,7 +9,7 @@ const http = require('http');
 
 const app = express();
 app.use('/uploads', express.static('uploads'))
-const PORT = process.env.PORT || 5005;
+const PORT =  5005;
 
 
 app.use(cors());
