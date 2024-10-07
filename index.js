@@ -26,18 +26,25 @@ const mongoose = require("mongoose");
 //     console.warn("db connection done")
 // })
 
-mongoose.connect(process.env.DB_STRING, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 20000, // Increase server selection timeout
-  socketTimeoutMS: 45000 // Increase socket timeout
-})
-.then(() => {
-  console.log('MongoDB connected');
-})
-.catch(err => {
-  console.error('MongoDB connection error:', err);
-});
+const connectWithRetry = () => {
+  mongoose.connect(process.env.DB_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 20000,
+    socketTimeoutMS: 45000,
+  })
+  .then(() => {
+    console.log('MongoDB connected');
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    setTimeout(connectWithRetry, 5000); // Retry after 5 seconds
+  });
+};
+
+// Start the initial connection attempt
+connectWithRetry();
+
 
 
 
