@@ -21,11 +21,10 @@ app.use(express.json());
 
 // connecting with database
 const mongoose = require("mongoose");
-console.log("MongoDB Connection String:", process.env.DB_STRING);
-mongoose.connect(process.env.DB_STRING)
-  .then(() => console.warn("DB connection successful"))
-  .catch(err => console.error("DB connection error:", err));
-
+mongoose.connect(process.env.DB_STRING
+).then(()=>{
+    console.warn("db connection done")
+})
 
 
 
@@ -72,3 +71,6 @@ app.all("*", (req, res) => res.status(404).json({ error: "404 Not Found" }));
 const server = app.listen(PORT, () =>
   console.log(`Server running on ${process.env.BACKEND_URL}`)
 );
+
+
+
