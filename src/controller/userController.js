@@ -8,7 +8,7 @@ const imgUpload = require("../utils/imageUpload")
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone'); 
 const auth = require('../utils/auth');
-require("dotenv").config();
+const { userInfo } = require("os");
 
 
 
@@ -141,6 +141,31 @@ userController.get("/getUserbyId/:userId", async (req, res) => {
   }
 });
 
+
+userController.get("/getAllUsers", async (req, res) => {
+  try {
+
+    const data = await UserInfo.findOne({}); 
+    
+    if (!data) {
+      return sendResponse(res, 404, "Not Found", {
+        success: false,
+        message: "Users not found",
+      });
+    }
+
+    sendResponse(res, 200, "Success", {
+      success: true,
+      message: "users retrieved successfully!",
+      data
+    });
+  } catch (error) {
+    console.log(error);
+    sendResponse(res, 500, "Failed", {
+      message: error.message || "Internal server error",
+    });
+  }
+});
 
 
 module.exports = userController;

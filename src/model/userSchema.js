@@ -11,7 +11,6 @@ const userSchema = mongoose.Schema({
     ConfirmPassword: { type: String },
     EmailId: { type: String },
     Designation: {type: String},
-    CompanyName: {type: String},
     Address: {type: String},
 });
 

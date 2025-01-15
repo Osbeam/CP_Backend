@@ -15,6 +15,10 @@ const loanFormSchema = mongoose.Schema({
     Photo: { type: String },
     SalarySlip: { type: String },
     TwoYearITR: { type: String },
+    IncomeType: {   
+        type: [String],
+        enum: ['BusinessIncome', 'ProfessionalIncome', 'SalaryIncome']  
+    },
 });
 
 loanFormSchema.plugin(timestamps);

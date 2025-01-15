@@ -28,7 +28,6 @@ mongoose.connect(process.env.DB_STRING
 
 
 
-
 const server1 = http.createServer(app);
 const io = socketIO(server1, {
   cors: {
@@ -61,7 +60,7 @@ app.use((req, res, next) => {
 });
 
 
-app.get("/", (req, res) => res.send(`Server listing on port  ${PORT}`));
+app.get("/", (req, res) => res.send(`Server running on  ${PORT}`));
 app.use("/api", routes);
 app.all("*", (req, res) => res.status(404).json({ error: "404 Not Found" }));  
 
@@ -71,6 +70,3 @@ app.all("*", (req, res) => res.status(404).json({ error: "404 Not Found" }));
 const server = app.listen(PORT, () =>
   console.log(`Server running on ${process.env.BACKEND_URL}`)
 );
-
-
-
