@@ -11,52 +11,111 @@ const auth = require('../utils/auth');
 const { userInfo } = require("os");
 
 
-
-
 const uploadimg = imgUpload.fields([
   { name: 'ProfileImage', maxCount: 1 }
 ]);
 
 
-userController.post('/Register', async (req, res) => {
-  try {
-    const { Password, ConfirmPassword } = req.body;
+userController.post(
+  "/Register",
+  imgUpload.fields([
+    { name: "ProfileImage", maxCount: 1 },
+    { name: "UploadPanCard", maxCount: 1 },
+    { name: "UploadAadharCard", maxCount: 1 },
+    { name: "UploadPhoto", maxCount: 1 },
+    { name: "UploadCheque", maxCount: 1 },
+    { name: "UploadBankStatement", maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+      const {
+        FirstName,
+        MiddleName,
+        LastName,
+        EmailId,
+        MobileNumber,
+        Password,
+        ConfirmPassword,
+        DateOfBirth,
+        Gender,
+        RefralCode,
+        PanNumber,
+        AadharNumber,
+        FatherName,
+        CurrentAddress,
+        BankName,
+        AccountNumber,
+        ConfirmAccountNumber,
+        IfscCode,
+        AccountType
+      } = req.body;
 
-    const existingUser = await UserInfo.findOne({
-      $or: [{ EmailId: req.body.EmailId }, { MobileNumber: req.body.MobileNumber }]
-    });
+      // Check if user exists
+      const existingUser = await UserInfo.findOne({
+        $or: [{ EmailId }, { MobileNumber }]
+      });
 
-    if (existingUser) {
-      return res.status(409).send({
+      if (existingUser) {
+        return sendResponse(res, 409, "Conflict", {
+          success: false,
+          message: "Email or Mobile number already exists"
+        });
+      }
+
+      // Password match check
+      if (Password !== ConfirmPassword) {
+        return sendResponse(res, 400, "Bad Request", {
+          success: false,
+          message: "Password and Confirm Password do not match"
+        });
+      }
+
+      // Prepare file paths if uploaded
+      const files = req.files;
+      const userData = {
+        FirstName,
+        MiddleName,
+        LastName,
+        EmailId,
+        MobileNumber,
+        Password,
+        DateOfBirth,
+        Gender,
+        RefralCode,
+        PanNumber,
+        AadharNumber,
+        FatherName,
+        CurrentAddress,
+        BankName,
+        AccountNumber,
+        ConfirmAccountNumber,
+        IfscCode,
+        AccountType,
+        ProfileImage: files?.ProfileImage?.[0]?.path || "",
+        UploadPanCard: files?.UploadPanCard?.[0]?.path || "",
+        UploadAadharCard: files?.UploadAadharCard?.[0]?.path || "",
+        UploadPhoto: files?.UploadPhoto?.[0]?.path || "",
+        UploadCheque: files?.UploadCheque?.[0]?.path || "",
+        UploadBankStatement: files?.UploadBankStatement?.[0]?.path || ""
+      };
+
+      const userCreated = new UserInfo(userData);
+      await userCreated.save();
+
+      return sendResponse(res, 200, "Success", {
+        success: true,
+        message: "User Registered successfully!",
+        UserData: userCreated
+      });
+    } catch (error) {
+      console.error(error);
+      return sendResponse(res, 500, "Internal Server Error", {
         success: false,
-        message: "Email or mobile number already exists"
+        message: error.message || "Something went wrong"
       });
     }
-    if (Password !== ConfirmPassword) {
-      return res.status(400).send({
-        success: false,
-        message: "Password and confirm password do not match"
-      });
-    }
-
-    const userData = { ...req.body };
-
-    const userCreated = new UserInfo(userData);
-    await userCreated.save();
-
-    sendResponse(res, 200, "Success", {
-      success: true,
-      message: "User Registered successfully!",
-      userData: userCreated
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: error.message || "Internal server error",
-    });
   }
-});
+);
 
 
 userController.post("/Login", async (req, res) => {
@@ -112,7 +171,6 @@ userController.put("/update", uploadimg, async (req, res) => {
     });
   }
 });
-
 
 
 userController.get("/getUserbyId/:userId", async (req, res) => {
