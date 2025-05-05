@@ -155,36 +155,74 @@ userController.put(
     { name: "UploadAadharCard", maxCount: 1 },
     { name: "UploadPhoto", maxCount: 1 },
     { name: "UploadCheque", maxCount: 1 },
-    { name: "UploadBankStatement", maxCount: 1 }
+    { name: "UploadBankStatement", maxCount: 1 },
   ]),
   async (req, res) => {
     try {
       const {
         _id,
         FirstName,
+        MiddleName,
         LastName,
+        EmailId,
         MobileNumber,
+        DateOfBirth,
+        Gender,
+        RefralCode,
+        Password,
+        ConfirmPassword,
+        PanNumber,
+        AadharNumber,
+        FatherName,
+        CurrentAddress,
+        BankName,
+        AccountNumber,
+        ConfirmAccountNumber,
+        IfscCode,
+        AccountType,
         Designation,
-        Address
+        Address,
       } = req.body;
 
       const files = req.files;
 
       const updateFields = {
         FirstName,
+        MiddleName,
         LastName,
+        EmailId,
         MobileNumber,
+        DateOfBirth,
+        Gender,
+        RefralCode,
+        Password,
+        ConfirmPassword,
+        PanNumber,
+        AadharNumber,
+        FatherName,
+        CurrentAddress,
+        BankName,
+        AccountNumber,
+        ConfirmAccountNumber,
+        IfscCode,
+        AccountType,
         Designation,
         Address,
       };
 
       // Attach uploaded file paths only if files are sent
-      if (files?.ProfileImage) updateFields.ProfileImage = files.ProfileImage[0].path;
-      if (files?.UploadPanCard) updateFields.UploadPanCard = files.UploadPanCard[0].path;
-      if (files?.UploadAadharCard) updateFields.UploadAadharCard = files.UploadAadharCard[0].path;
-      if (files?.UploadPhoto) updateFields.UploadPhoto = files.UploadPhoto[0].path;
-      if (files?.UploadCheque) updateFields.UploadCheque = files.UploadCheque[0].path;
-      if (files?.UploadBankStatement) updateFields.UploadBankStatement = files.UploadBankStatement[0].path;
+      if (files?.ProfileImage)
+        updateFields.ProfileImage = files.ProfileImage[0].path;
+      if (files?.UploadPanCard)
+        updateFields.UploadPanCard = files.UploadPanCard[0].path;
+      if (files?.UploadAadharCard)
+        updateFields.UploadAadharCard = files.UploadAadharCard[0].path;
+      if (files?.UploadPhoto)
+        updateFields.UploadPhoto = files.UploadPhoto[0].path;
+      if (files?.UploadCheque)
+        updateFields.UploadCheque = files.UploadCheque[0].path;
+      if (files?.UploadBankStatement)
+        updateFields.UploadBankStatement = files.UploadBankStatement[0].path;
 
       const updatedUser = await UserInfo.findByIdAndUpdate(
         _id,
@@ -195,20 +233,20 @@ userController.put(
       if (!updatedUser) {
         return sendResponse(res, 404, "Not Found", {
           success: false,
-          message: "User not found"
+          message: "User not found",
         });
       }
 
       return sendResponse(res, 200, "Success", {
         success: true,
         message: "User updated successfully",
-        UserData: updatedUser
+        UserData: updatedUser,
       });
     } catch (error) {
       console.error("Update Error:", error);
       return sendResponse(res, 500, "Internal Server Error", {
         success: false,
-        message: error.message || "Something went wrong"
+        message: error.message || "Something went wrong",
       });
     }
   }
