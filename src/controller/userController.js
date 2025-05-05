@@ -147,30 +147,72 @@ userController.post("/Login", async (req, res) => {
 });
 
 
-userController.put("/update", uploadimg, async (req, res) => {
-  try {
-    const data = await userServices.updateData({ _id: req.body._id }, req.body);
+userController.put(
+  "/update",
+  imgUpload.fields([
+    { name: "ProfileImage", maxCount: 1 },
+    { name: "UploadPanCard", maxCount: 1 },
+    { name: "UploadAadharCard", maxCount: 1 },
+    { name: "UploadPhoto", maxCount: 1 },
+    { name: "UploadCheque", maxCount: 1 },
+    { name: "UploadBankStatement", maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+      const {
+        _id,
+        FirstName,
+        LastName,
+        MobileNumber,
+        Designation,
+        Address
+      } = req.body;
 
-    // Check if files are present in the request and specifically if ProfileImage is there
-    if (req.files && req.files.ProfileImage) {
-      data.ProfileImage = req.files.ProfileImage[0].path;
-      
-      await data.save();
+      const files = req.files;
+
+      const updateFields = {
+        FirstName,
+        LastName,
+        MobileNumber,
+        Designation,
+        Address,
+      };
+
+      // Attach uploaded file paths only if files are sent
+      if (files?.ProfileImage) updateFields.ProfileImage = files.ProfileImage[0].path;
+      if (files?.UploadPanCard) updateFields.UploadPanCard = files.UploadPanCard[0].path;
+      if (files?.UploadAadharCard) updateFields.UploadAadharCard = files.UploadAadharCard[0].path;
+      if (files?.UploadPhoto) updateFields.UploadPhoto = files.UploadPhoto[0].path;
+      if (files?.UploadCheque) updateFields.UploadCheque = files.UploadCheque[0].path;
+      if (files?.UploadBankStatement) updateFields.UploadBankStatement = files.UploadBankStatement[0].path;
+
+      const updatedUser = await UserInfo.findByIdAndUpdate(
+        _id,
+        { $set: updateFields },
+        { new: true }
+      );
+
+      if (!updatedUser) {
+        return sendResponse(res, 404, "Not Found", {
+          success: false,
+          message: "User not found"
+        });
+      }
+
+      return sendResponse(res, 200, "Success", {
+        success: true,
+        message: "User updated successfully",
+        UserData: updatedUser
+      });
+    } catch (error) {
+      console.error("Update Error:", error);
+      return sendResponse(res, 500, "Internal Server Error", {
+        success: false,
+        message: error.message || "Something went wrong"
+      });
     }
-
-    sendResponse(res, 200, "Success", {
-      success: true,
-      message: "User updated successfully!",
-      data: data
-    });
-  } catch (error) {
-    console.log(error);
-    sendResponse(res, 500, "Failed", {
-      success: false,
-      message: error.message || "Internal server error",
-    });
   }
-});
+);
 
 
 userController.get("/getUserbyId/:userId", async (req, res) => {
